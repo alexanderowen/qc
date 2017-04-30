@@ -1,0 +1,41 @@
+/* badMethodOverride.qk
+ *
+ * Demonstrates some of the type checking that occurs
+ * when you overwrite methods during inheritance, as well
+ * as some bad method declarations.
+ * 
+ * Reports multiple SyntaxErrors
+ */
+
+class A() {
+}
+class B() extends A {
+}
+
+class C() {
+    def foo(b : B) : A {
+        return A();
+    }
+
+    def bar() : A {
+        return A();
+    }
+
+    def baz(x : Int) {
+        
+    }
+}
+
+class D() extends C {
+    def foo(c : C) : B { // bad overwrite, C is not a supertype of B
+        return B();
+    }
+
+    def bar() : C {
+        return C(); // bad overwrite, C is not a subtype of A
+    }
+
+    def baz(x : Int, y : Int ) { // bad overwrite, too many arguments
+
+    }
+}

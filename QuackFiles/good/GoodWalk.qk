@@ -1,0 +1,47 @@
+/* GoodWalk.qk
+ *
+ * Demonstrates the correctness of the typechecker regarding
+ * loops that climb up the class hierarchy. 
+ *
+ * Output:
+ * Returning type C3 from C4.foo()
+ * Returning type C2 from C3.foo()
+ * Returning type C1 from C2.foo()
+ * Returning type C1 from C1.foo()
+ * 
+ */
+
+class C1() extends Obj {
+   def foo():  C1 {
+       "Returning type C1 from C1.foo()\n".PRINT();
+       return C1();
+   }
+}
+
+class C2() extends C1 {
+   def foo():  C1 {
+        "Returning type C1 from C2.foo()\n".PRINT();
+        return C1();    /* Conforms to C1.foo() */
+   }
+}
+
+class C3() extends C2 { 
+   def foo(): C2 {
+        "Returning type C2 from C3.foo()\n".PRINT();
+        return C2();   /* Conforms to C2.foo() */
+   }
+}
+
+class C4() extends C3 {
+    def foo() : C3 {
+         "Returning type C3 from C4.foo()\n".PRINT();
+         return C3();  /* Conforms to C3.foo() */
+    }
+}
+
+x = C4();
+i = 0;
+while ( i < 4 ) {
+   x = x.foo();      /* OK, terminates at C1 */
+   i = i + 1;
+}

@@ -1,0 +1,22 @@
+/* recursion.qk
+ *
+ * Demonstrates Quack's ability to use recursion 
+ */
+class Math() {
+  def fact_rec(x : Int) : Int {
+    if (x <= 1)
+    {
+      return x;
+    }
+    else
+    {
+      m = Math();
+      x = x * m.fact_rec(x - 1);
+      return x;
+    }
+  }
+}
+
+m = Math();
+z = m.fact_rec(6);
+z.PRINT();

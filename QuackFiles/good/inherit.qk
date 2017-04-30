@@ -1,0 +1,31 @@
+/* inherit.qk
+ *
+ * Demonstrates user defined classes, featuring method overwritting and inheritance
+ * Also demonstrates dynamic method dispatch when static type != dynamic type
+ * 
+ * Output:
+ * Called B.foo
+ * Called A.bar
+ */
+class A() {
+    def foo() {
+        "Called A.foo\n".PRINT();
+    }
+
+    def bar() {
+        "Called A.bar\n".PRINT();
+    }
+}
+
+class B() extends A {
+    def foo() {
+        "Called B.foo\n".PRINT();
+    }
+}
+
+b = B();
+b.foo(); //Overwritten method
+b.bar(); //Inherited method
+a : A = B();
+a.foo(); // Dynamic dispatch
+

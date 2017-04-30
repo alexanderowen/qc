@@ -1,0 +1,25 @@
+/* not_a_duck.qk
+ * 
+ * Demonstration of Quack's static type inference,
+ * flow-insensitivity and type checking.
+ * 
+ * Reports a SyntaxError
+ */
+
+class Waterfowl() {
+  def not_duck_typing(x: Int): Int {
+     if x < 7 {
+        a = 42;          // a: Int
+        b = 13;          // b: Int
+     } else {
+        a = "forty-two"; // a: String
+        b = "thirteen";  // b: String
+     }
+     // a,b:  Obj (least common ancestor of Int and String)
+     if a < b {   // ERROR:  cannot compare Obj < Obj 
+        return 1;
+     } else {
+        return 2; 
+     }
+  }
+}

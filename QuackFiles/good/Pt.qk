@@ -1,0 +1,50 @@
+/* Pt.qk
+ *
+ * Demonstrates Quack classes, featuring instance variables, method overloading, and 
+ * method calls.  
+ * 
+ * Output:
+ * Pt(13, 42)
+ * Pt(18, 47)
+ * Pt(28, 57)
+ */
+ class Pt(x: Int, y: Int) {
+     this.x = x;
+     this.y = y;
+
+     def _get_x(): Int {
+     	 return this.x; 
+     } 
+
+     def _get_y(): Int {
+     	 return this.y;
+     }
+
+     /* Mutator: Evaluate for effect */
+     def translate(dx: Int, dy: Int) {
+     	this.x = this.x + dx;
+        this.y = this.y + dy;
+     }
+
+     /* More functional style: Evaluate for value */
+     def PLUS(other: Pt): Pt {
+     	 return Pt(this.x + other.x, this.y + other.y); 
+     }
+
+    def PRINT() {
+        "Pt(".PRINT();
+        this.x.PRINT();
+        ", ".PRINT();
+        this.y.PRINT();
+        ")\n".PRINT();
+    }
+}
+p1 = Pt(13, 42);
+p1.PRINT(); 
+
+p2 = Pt(5, 5);
+p3 = p1 + p2;
+p3.PRINT();
+
+p3.translate(10, 10);
+p3.PRINT();
