@@ -1,5 +1,6 @@
 # Quack language compiler  
 Compiler for the Quack language, which is an imperative, object-oriented language which features inheritance, type inference, static scope, method overriding, dynamic dispatch, and short-circuit evaluation.  
+Examples of what a Quack program looks like can be found in the 'QuackFiles' directory.  
 ## Build and Execution  
 Build the compiler with `make` which generates an executable called `qc`. This is the Quack compiler   
 Compile your Quack code with `./qc filename`  
