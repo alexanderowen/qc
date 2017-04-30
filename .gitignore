@@ -1,0 +1,8 @@
+# Local files
+*.o
+q.c
+pgm
+qc
+
+# Vim swap files
+*.swp
