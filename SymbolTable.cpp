@@ -42,7 +42,6 @@ SymbolTable *SymbolTable::intersection(list<SymbolTable*> sts, TypeTree *tt)
     SymbolTable *total = new SymbolTable(parent);
     bool found = true;
     VariableSym *v;
-    //fprintf(stderr, "About to do intersection on map with size %lu\n", vMap.size());
     for (unordered_map<string, VariableSym*>::const_iterator key = vMap.begin(); key != vMap.end(); ++key)
     {
         char *type = key->second->type;
@@ -51,26 +50,22 @@ SymbolTable *SymbolTable::intersection(list<SymbolTable*> sts, TypeTree *tt)
             v = (*it)->lookupVariableNoParent(strdup(key->first.c_str()));
             if (v == NULL)
             {
-                //fprintf(stderr, "No match found: %s\n", key->first.c_str());
                 found = false;
                 break;
             } 
             else 
             {
-                //fprintf(stderr, "Performing LCA on '%s' and '%s'\n", type, v->type);
                 type = tt->LCA(type, v->type);
             } 
         }
 
         if (found) 
         {
-            //fprintf(stderr, "Found a match: %s\n", key->first.c_str());
             VariableSym *newVar = new VariableSym(strdup(key->first.c_str()),type);
             total->addVariable(strdup(key->first.c_str()), newVar);
         }
         found = true;
     }
-    //fprintf(stderr, "All done with intersection\n");
     return total;    
 }
 
@@ -96,7 +91,6 @@ SymbolTable *SymbolTable::remove(SymbolTable *st1, SymbolTable *st2)
         VariableSym *v = st2->lookupVariableNoParent(q);
         if (v == NULL)
         {
-            //fprintf(stderr, "Adding variable '%s' to SymTab\n", it->first.c_str());
             total->addVariable(strdup(it->first.c_str()), it->second);
         }
     }
@@ -105,7 +99,6 @@ SymbolTable *SymbolTable::remove(SymbolTable *st1, SymbolTable *st2)
 
 VariableSym *SymbolTable::lookupVariable(char *name)
 {
-    //fprintf(stderr, "Looking up variable '%s'\n", name);
     string key = name;
     auto search = vMap.find(key);
 
@@ -135,14 +128,8 @@ VariableSym *SymbolTable::lookupVariableNoParent(char *name)
 
 void SymbolTable::addVariable(char *name, VariableSym *value)
 {
-    //fprintf(stderr, "Adding '%s' of type '%s' to SymTab\n", name, value->type);
     string key = name;
     vMap.insert({key, value});
-    //bool ok = vMap.insert({key, value}).second;
-    //fprintf(stderr, "The insertion was '%d'\n", ok);
-    //fprintf(stderr, "Size of vMap = '%lu'\n", vMap.size());
-    //fprintf(stderr, "Address of this Symtab = '%p'\n", this);
-    //free(name);
 }
 
 void SymbolTable::removeVariable(VariableSym *vs)

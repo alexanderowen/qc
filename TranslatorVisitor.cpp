@@ -71,10 +71,6 @@ TranslatorVisitor::TranslatorVisitor(char *fn, TypeTree *_tt, SymbolTable *_st)
 
     keywords.insert({"true", "lit_true"});
     keywords.insert({"false", "lit_false"});
-    /*
-    keywords.insert({"true", "lit_true->value"});
-    keywords.insert({"false", "lit_false->value"});
-    */
 
     tt = _tt;
     st = _st;
@@ -82,8 +78,6 @@ TranslatorVisitor::TranslatorVisitor(char *fn, TypeTree *_tt, SymbolTable *_st)
 
 TranslatorVisitor::~TranslatorVisitor()
 {
-    //if (f != NULL)
-      //  fclose(f);
 }
 
 void TranslatorVisitor::visitProgram(Program *p)
@@ -182,8 +176,6 @@ void TranslatorVisitor::visitClassSignature(ClassSignature *cs)
         }
     }
     fprintf(f, ") {\n");
-    //cs->exop->accept(this);
-
 }
 
 void TranslatorVisitor::printMethodSignatures(TypeNode *tn)
@@ -282,16 +274,6 @@ void TranslatorVisitor::visitMethod(Method *m)
     {
         fprintf(f, "\t return nothing;");
     }
-    /*
-    TrueIdentOption *ti = dynamic_cast<TrueIdentOption*>(m->ident);
-    if (ti != NULL)
-    {
-        if (strcmp(ti->id, (char*)"Nothing") == 0)
-        {
-            fprintf(f, "\t return nothing;");
-        }
-    }
-    */
     fprintf(f, "\n}\n");
     inMethod = false;
 }
@@ -315,23 +297,8 @@ void TranslatorVisitor::visitFalseIdentOption(FalseIdentOption *t)
 
 void TranslatorVisitor::visitAssignmentStatement(AssignmentStatement *a)
 {
-    /* Declares the type of variable; moved to begining of if, method, while, etc
-    string t = getType(a->rexpr);
-    fprintf(stderr, "Found type :'%s'\n", t.c_str());
-    auto v = typeMap.find(t);
-    if (v != typeMap.end()) 
-    {
-        //TODO: Prints unnecessarily when the variable is already defined
-        fprintf(f, "%s ", v->second.c_str());
-    }
-    a->lexpr->print(f);
-    fprintf(f, ";\n");
-    */
     a->lexpr->accept(this);
     fprintf(f, " = ");
-    //a->ident->accept(this); //TODO: Don't ignore ident???
-
-
     a->rexpr->accept(this);
     fprintf(f, ";");
 }
@@ -349,17 +316,6 @@ void TranslatorVisitor::visitIfClause(IfClause *i)
     i->rexpr->accept(this);
     fprintf(f, ")->value) {\n"); // may need to remove
     printLocalVariables(typeMap, i->st, f, &methodPrinted);
-    /*
-    for (unordered_map<string, VariableSym*>::iterator it = i->st->vMap.begin(); it != i->st->vMap.end(); ++it) 
-    {
-        //fprintf(f, "Variable in if: %s\n", (*it).first.c_str());
-        auto q = typeMap.find((*it).second->type);
-        if (q != typeMap.end())
-        {
-            fprintf(f, "%s %s;\n", q->second.c_str(), (*it).first.c_str());
-        }
-    }
-    */
     for (list<Statement *>::const_iterator it = i->stmts->begin(); it != i->stmts->end(); ++it)
     {
         fprintf(f, "\t");
@@ -402,7 +358,6 @@ void TranslatorVisitor::visitWhileStatement(WhileStatement *w)
     fprintf(f, "while (");
     w->rexpr->accept(this);
     fprintf(f, "->value) {\n"); //since rexpr is of type boolean, must access value
-    //printLocalVariables(typeMap, w->st, f); //no concept of scoping within while loops
     for (list<Statement *>::const_iterator it = w->stmts->begin(); it != w->stmts->end(); ++it)
     {
         (*it)->accept(this);
@@ -413,7 +368,6 @@ void TranslatorVisitor::visitWhileStatement(WhileStatement *w)
 void TranslatorVisitor::visitConstructorRExpr(ConstructorRExpr *c)
 {
     fprintf(f, "new_%s(", c->id);
-    //for (list<RExpr *>::const_iterator it = c->args->begin(); it != c->args->end(); ++it)
     for (list<RExpr *>::const_iterator it = c->args->begin(); it != c->args->end(); )
     {
         (*it)->accept(this);
@@ -444,8 +398,6 @@ void TranslatorVisitor::visitNotNode(NotNode *n)
 
 void TranslatorVisitor::visitBinaryOperatorNode(BinaryOperatorNode *b)
 {
-    //b->left->accept(this);
-    //fprintf(f, "->clazz->");
     switch(b->operation) {
         case 0:
             b->left->accept(this);
@@ -493,8 +445,6 @@ void TranslatorVisitor::visitBinaryOperatorNode(BinaryOperatorNode *b)
             fprintf(f, "MORE");
             break;
         case 9:
-            //fprintf(f, "AND");
-            //
             fprintf(f, "((");
             b->left->accept(this);
             fprintf(f, "->value) ? (");
@@ -503,8 +453,6 @@ void TranslatorVisitor::visitBinaryOperatorNode(BinaryOperatorNode *b)
             return;
             break;
         case 10:
-            //fprintf(f, "OR");
-            //
             fprintf(f, "((");
             b->left->accept(this);
             fprintf(f, "->value ) ? lit_true : (");
@@ -532,12 +480,6 @@ void TranslatorVisitor::visitIdentNode(IdentNode *i)
     {
         fprintf(f, "%s", q->second.c_str());
     } 
-    /*  Moved to ObjectFieldLExpr, where it belongs
-    else if (strcmp(i->id, (char*)"this") == 0)
-    {
-        fprintf(f, "thing->%s", i->id);
-    }
-    */
     else
     {
         fprintf(f, "%s", i->id);
@@ -547,8 +489,7 @@ void TranslatorVisitor::visitIdentNode(IdentNode *i)
 void TranslatorVisitor::visitObjectFieldLExpr(ObjectFieldLExpr *o)
 {
     o->rexpr->accept(this);
-    fprintf(f, "->%s", o->id); //TODO: Only correct within the constructor
-
+    fprintf(f, "->%s", o->id); 
 }
 
 void TranslatorVisitor::visitDotRExpr(DotRExpr *d) 
@@ -606,46 +547,6 @@ char *TranslatorVisitor::getType(RExpr *r)
     type = r->type();
     if (strcmp(type, (char*)"-") != 0) //type covered because it's a literal or easy to identify
         return type;
-/*
-    IdentNode *ident = isIdent(r);
-    if (ident != NULL) //type is in the variable information
-    {
-        if (strcmp(ident->id, (char*)"this") == 0)
-        {
-            return className;
-        }
-        VariableSym *v = st->lookupVariable(ident->id);
-        return v->type;
-    }
-
-    DotRExpr *dot = dynamic_cast<DotRExpr*>(r);
-    if (dot != NULL)
-    {
-        char *_type = getType(dot->rexpr);
-        MethodNode *m = tt->typeGetMethod(_type, dot->id);
-        if (m == NULL)
-        {
-            return strdup((char*)"-");
-        }
-        return m->returnType;
-    }
-    ObjectFieldLExpr *ofl = isOFL(r);
-    if (ofl != NULL)
-    {
-        char *rType = getType(ofl->rexpr);
-        if (rType == NULL)
-            return strdup((char*)"-");
-        char *__type = tt->getVarFromType(rType, ofl->id);
-        if (__type == NULL)
-        {
-            char *msg = (char*) malloc(sizeof(char)*256);
-            sprintf(msg, "%d: Syntax Error\n\tType '%s' has no instance variable '%s'\n", r->lineno, rType, ofl->id);
-            addError(msg);
-            return strdup((char*)"-");
-        }
-        return __type;
-    }
-*/
 
     PlusNode *plus = dynamic_cast<PlusNode*>(r);
     if (plus != NULL)
@@ -675,15 +576,6 @@ void TranslatorVisitor::printRExpr(RExpr *r)
     IdentNode *ident = isIdent(r);
     if (ident != NULL) //type is in the variable information
     {
-        /*
-        if (strcmp(ident->id, (char*)"this") == 0)
-        {
-            return className;
-        }
-        VariableSym *v = st->lookupVariable(ident->id);
-        return v->type;
-        */
         fprintf(f, "%s", ident->id);
     }
-     
 }

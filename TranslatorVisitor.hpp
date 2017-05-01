@@ -58,23 +58,17 @@ class TranslatorVisitor : public Visitor
         void visitClass(Class *);
         void visitClassSignature(ClassSignature *);
         void visitClassBody(ClassBody *);
-
         void visitFormalArg(FormalArg *);
         void visitMethod(Method *);
         void visitTrueIdentOption(TrueIdentOption *);
         void visitFalseIdentOption(FalseIdentOption *);
-
         void visitAssignmentStatement(AssignmentStatement *);
         void visitReturnStatement(ReturnStatement *);
-
         void visitIfClause(IfClause *);
         void visitElifClause(ElifClause *);
         void visitTrueElseOption(TrueElseOption *);
-
         void visitWhileStatement(WhileStatement *);
-
         void visitConstructorRExpr(ConstructorRExpr *);
-
         void visitIntNode(IntNode *);
         void visitStringNode(StringNode *);
         void visitNotNode(NotNode *);

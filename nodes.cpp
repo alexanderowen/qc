@@ -551,7 +551,6 @@ bool Program::checkClassHierarchy()
     {
         char *id = (*it)->getID();
         char *extend = (*it)->getExtends();
-        //fprintf(stderr, "Extends: '%s'\n", extend);
         
         if (withinList(&toBeDef, (*it)->getID()) && withinList(&userDef, (*it)->getExtends()))
             return false;

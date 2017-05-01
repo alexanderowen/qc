@@ -46,8 +46,7 @@ class TypeTree
         bool isSubtype(char *_t1, char *_t2);
         bool isSupertype(char *_t1, char *_t2);
 
-        /* Find least common ancestor between two types
-         * */
+        /* Find least common ancestor between two types */
         char *LCA(char *_t1, char *_t2);
 
         bool typeHasMethod(char *type, char* method); 

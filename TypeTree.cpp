@@ -298,7 +298,7 @@ bool TypeNode::hasInstanceVar(char *name)
     return false;
 }
 
-//TODO: Has no way of knowing if this variable should be trashed
+//NOTE: Has no way of knowing if this variable should be trashed
 //      as a result of it being defined in a bad if/elif/else declaration tree
 //      It is handled outside of regular variables by the SymbolTable structure
 void TypeNode::addInstanceVar(VariableNode *v, TypeTree *tt)
